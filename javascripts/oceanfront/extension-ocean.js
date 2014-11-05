@@ -193,20 +193,20 @@ var ImageButton = CMSObject.extend({
        Object.prototype.toString.call( cmsobj ) === '[object Array]') {
 
       var node = html.div({'class':'clickable textButton'}, cmstext[0]);
-      DOM.setStyleAttribute(node,'background-image','url("'+cmsobj[0]+'")');
-
       this.setElement(node);
+      this.setupCMSObj();
+      $(this.getElement()).css('background-image','url("'+cmsobj[0]+'")');
     } else if(typeof cmstext === "string"  && 
       Object.prototype.toString.call( cmsobj ) === '[object Array]') {
       var node = html.div({'class':'clickable textButton'}, cmstext);
-      DOM.setStyleAttribute(node,'background-image','url("'+cmsobj[0]+'")');
+      $(node).css('background-image','url("'+cmsobj[0]+'")');
 
       this.setElement(node);
+      this.setupCMSObj();
     } else {
       DOM.setInnerText(this.getElement(), cmsobj);
+      this.setupCMSObj();
     }
-
-    this.setupCMSObj();
 
     if(fn) {
       this.addOnMouseUpListener(fn);
@@ -268,13 +268,15 @@ var ImageButton = CMSObject.extend({
 var TextButton = CMSObject.extend({
   init: function(cmsobj, fn) {
     this._super(cmsobj);
+
+    this.usage = 'text';
     
     if(Object.prototype.toString.call( cmsobj ) === '[object Array]') {
       this.setElement(html.div({'class':'clickable textButton'}, cmsobj[0]) );
     } else {
       DOM.setInnerText(this.getElement(), cmsobj);
     }
-    this.usage = 'text';
+    
     this.setupCMSObj();
 
     if(fn) {
@@ -286,13 +288,15 @@ var TextButton = CMSObject.extend({
 var HTMLText = CMSObject.extend({
   init: function(cmsobj, wordwrap) {
     this._super(cmsobj, wordwrap);
+
+    this.usage = 'text';
     
     if(Object.prototype.toString.call( cmsobj ) === '[object Array]') {
       this.setText(cmsobj[0]);
     } else {
       DOM.setInnerText(this.getElement(),cmsobj);
     }
-    this.usage = 'text';
+    
     this.setupCMSObj();
   },
   getText: function() {
@@ -315,27 +319,31 @@ var HTMLText = CMSObject.extend({
 var Text = CMSObject.extend({
   init: function(cmsobj, wordwrap) {
     this._super(cmsobj, wordwrap);
+
+    this.usage = 'text';
     
     if(Object.prototype.toString.call( cmsobj ) === '[object Array]') {
       this.setText(cmsobj[0]);
     } else {
       DOM.setInnerText(this.getElement(),cmsobj);
     }
-    this.usage = 'text';
+    
     this.setupCMSObj();
   }
 });
 
-var Image = CMSObject.extend({
+var OFImage = CMSObject.extend({
   init: function(cmsobj) {
     this._super(cmsobj);
+
+    this.usage = 'image';
 
     if(Object.prototype.toString.call( cmsobj ) === '[object Array]') {
       this.setElement(html.img({'src':cmsobj[0]}));
     } else {
       DOM.setInnerText(this.getElement(), cmsobj);
     }
-    this.usage = 'image';
+    
     this.setupCMSObj();
   }
 });
@@ -344,15 +352,17 @@ var BackgroundImage = CMSPanelObject.extend({
   init: function(cmsobj) {
     this._super(cmsobj);
 
+    this.usage = 'image';
+
     if(Object.prototype.toString.call( cmsobj ) === '[object Array]') {
       var node = html.div({});
-      DOM.setStyleAttribute(node,'background-image','url("'+cmsobj[0]+'")');
       this.setElement(node);
+      this.setupCMSObj();
+      $(this.getElement()).css('background-image','url("'+cmsobj[0]+'")');
     } else {
       DOM.setInnerText(this.getElement(), cmsobj);
+      this.setupCMSObj();
     }
-    this.usage = 'image';
-    this.setupCMSObj();
   }
 });
 
@@ -360,14 +370,16 @@ var SpriteSheet = CMSObject.extend({
   init: function(cmsobj) {
     this._super(cmsobj);
 
+    this.usage = 'image';
+
     if(Object.prototype.toString.call( cmsobj ) === '[object Array]') {
       this.setElement(html.div({}));
-      $(this.getElement()).css('background-image', 'url(' + cmsobj[0] + ')');
+      this.setupCMSObj();
+      $(this.getElement()).css('background-image','url("'+cmsobj[0]+'")');
     } else {
       DOM.setInnerText(this.getElement(), cmsobj);
+      this.setupCMSObj();
     }
-    this.usage = 'image';
-    this.setupCMSObj();
   }
 });
 
@@ -375,13 +387,15 @@ var SpriteSheetLink = CMSObject.extend({
   init: function(cmsobj) {
     this._super(cmsobj);
 
+    this.usage = 'image';
+
     if(Object.prototype.toString.call( cmsobj ) === '[object Array]') {
       this.setElement(html.a({}));
       $(this.getElement()).css('background-image', 'url(' + cmsobj[0] + ')');
     } else {
       DOM.setInnerText(this.getElement(), cmsobj);
     }
-    this.usage = 'image';
+    
     this.setupCMSObj();
   }
 });
@@ -390,12 +404,14 @@ var Markdown = CMSObject.extend({
   init: function(cmsobj) {
     this._super(cmsobj, true);
 
+    this.usage = 'markdown';
+
     if(Object.prototype.toString.call( cmsobj ) === '[object Array]') {
       DOM.setInnerHTML(this.getElement(), cmsobj[0]);
     } else {
       DOM.setInnerText(this.getElement(), cmsobj);
     }
-    this.usage = 'markdown';
+    
     this.setupCMSObj();
   }
 });
@@ -403,6 +419,8 @@ var Markdown = CMSObject.extend({
 var Link = CMSObject.extend({
   init: function(htmlobj) {
     this._super(htmlobj);
+
+    this.usage = 'link';
     
     //obj in this case is supposed to be a complete html a-tag in string format that we convert to a node
     if(Object.prototype.toString.call( htmlobj ) === '[object Array]') {
@@ -412,7 +430,7 @@ var Link = CMSObject.extend({
       DOM.setInnerText(tmp,htmlobj);
       this.setElement(tmp);
     }
-    this.usage = 'link';
+    
     this.setupCMSObj();
   }
 });
@@ -421,13 +439,15 @@ var Header1 = CMSObject.extend({
   init: function(cmsobj) {
     this._super(cmsobj);
     this.setElement(DOM.createH1());
+
+    this.usage = 'text';
     
     if(Object.prototype.toString.call( cmsobj ) === '[object Array]') {
       this.setText(cmsobj[0]);
     } else {
       DOM.setInnerText(this.getElement(),cmsobj);
     }
-    this.usage = 'text';
+    
     this.setupCMSObj();
   }
 });
@@ -437,12 +457,14 @@ var Header2 = CMSObject.extend({
     this._super(cmsobj);
     this.setElement(DOM.createH2());
 
+    this.usage = 'text';
+
     if(Object.prototype.toString.call( cmsobj ) === '[object Array]') {
       this.setText(cmsobj[0]);
     } else {
       DOM.setInnerText(this.getElement(),cmsobj);
     }
-    this.usage = 'text';
+    
     this.setupCMSObj();
   }
 });
@@ -451,13 +473,15 @@ var Header3 = CMSObject.extend({
   init: function(cmsobj) {
     this._super(cmsobj);
     this.setElement(DOM.createH3());
+
+    this.usage = 'text';
     
     if(Object.prototype.toString.call( cmsobj ) === '[object Array]') {
       this.setText(cmsobj[0]);
     } else {
       DOM.setInnerText(this.getElement(),cmsobj);
     }
-    this.usage = 'text';
+    
     this.setupCMSObj();
   }
 });
@@ -488,7 +512,7 @@ var PAPIBase = Class.extend({
     var self = this;
 
     // detect IE CORS transport
-    if($.browser.msie && ($.browser.version < 9)) {
+    if(Browser.name == "msie" && (Browser.version < 9)) {
       // detect IE CORS transport for IE older than v9 (IE10 started with XMLHttpRequest)
       if(console) console.log("IE detected. Changing XDomainRequest object");
       if ('XDomainRequest' in window && window.XDomainRequest !== null) {
@@ -558,29 +582,36 @@ var APIError = Class.extend({
   init: function(xhr) {
     var self = this;
     this.xhr = xhr;
+    this.status = xhr.status;
   },
   getStatus: function() {
     return this.xhr.status;
   },
   getErrorText: function() {
-    var error_obj = JSON.parse(this.xhr.responseText);
-    var text = "";
-    for(var key in error_obj) {
-      // Each value is a Array with errors in the key-subject
-      // Aggregate them with line break
-      for (var i = 0; i < error_obj[key].length; i++) {
-        if(error_obj[key][i] === "can't be blank") {
-          // Need to include key which says what can't be blank
-          text += key + " " + error_obj[key][i] + "\n";
-        } else {
-          text += error_obj[key][i] + "\n";
+    if(this.getStatus() == 500 && !this.xhr.responseText) {
+      return this.getStatusText();
+    } else if(this.getStatus() == 503) {
+      return this.getStatusText();
+    } else {
+      var error_obj = JSON.parse(this.xhr.responseText);
+      var text = "";
+      for(var key in error_obj) {
+        // Each value is a Array with errors in the key-subject
+        // Aggregate them with line break
+        for (var i = 0; i < error_obj[key].length; i++) {
+          if(error_obj[key][i] === "can't be blank") {
+            // Need to include key which says what can't be blank
+            text += key + " " + error_obj[key][i] + "\n";
+          } else {
+            text += error_obj[key][i] + "\n";
+          }
         }
       }
+      return text;
     }
-    return text;
   },
-  getErrorResponse: function() {
-    return JSON.parse(this.xhr.responseText);
+  getStatusText: function() {
+    return this.xhr.statusText;
   },
   getXHRObject: function() {
     return this.xhr;
