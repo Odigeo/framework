@@ -543,7 +543,8 @@ var PAPIBase = Class.extend({
         error: function(xhr, textStatus, errorThrown) {
           self.pre_error(xhr, textStatus, errorThrown);
           if(error_callback) {error_callback(new APIError(xhr));}
-        }
+        },
+        timeout: 20000
       });
     } else {
       $.ajax(link, {
@@ -561,7 +562,8 @@ var PAPIBase = Class.extend({
         error: function(xhr, textStatus, errorThrown) {
           self.pre_error(xhr, textStatus, errorThrown);
           if(error_callback) {error_callback(new APIError(xhr));}
-        }
+        },
+        timeout: 20000
       });
     }
   },
