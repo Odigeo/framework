@@ -128,21 +128,7 @@ var html = (function() {
             start = 1;
             for(var key in arg0) {
               if(arg0.hasOwnProperty(key)) {
-                if(key === 'style') {
-                  var arr = arg0[key].split(";");
-                  for(var i=0;i<arr.length;i++) {
-                    if(arr[i].length === 0)
-                      continue;
-                    var pair = arr[i].split(":");
-                    var name = pair[0], val=pair[1];
-                    //alert(name+":"+val);
-                    try {
-                      elem.style[name] = val;
-                    }catch(e) { alert("OUCH!"); }
-                  }
-                }
-                else
-                  elem.setAttribute(key,arg0[key]);
+                elem.setAttribute(key,arg0[key]);
               }
             }
           }
